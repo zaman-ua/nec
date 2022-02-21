@@ -1,0 +1,45 @@
+include _functions
+include _config
+include _mixins
+include ../loader/_loader
+
+block variables
+- main();
+
+doctype html
+html( lang='en', class= htmlClass )
+	head
+		title= pageName
+
+		meta( charset='utf-8' )
+		meta( name='viewport', content='width=device-width, height=device-height, initial-scale=1.0' )
+		meta( http-equiv='X-UA-Compatible', content='IE=edge' )
+
+		meta( property='og:title', content='Intense' )
+		meta( property='og:description', content='The smartest and the most flexible Bootstrap template' )
+		meta( property='og:image', content='images/banners/banner-01-620x360.png' )
+		meta( property='og:url', content='https://www.templatemonster.com/intense-multipurpose-html-template.html' )
+
+		link( rel='preload', href='data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D', as='image' )
+		link( rel='preload', href='components/base/base.css', as='style' )
+		link( rel='preload', href='components/base/core.js', as='script' )
+		link( rel='preload', href='components/base/script.js', as='script' )
+
+		link( rel='icon', href='images/favicon.ico', type='image/x-icon' )
+		link( rel='stylesheet', href='components/base/base.css' )
+		script( src='components/base/core.js' )
+		script( src='components/base/script.js' )
+
+		block head
+
+	body
+		.page( class= pageClass )
+			if( pageImage )
+				.page-image: +lazy-img( pageImage )
+			block page
+			block modal
+
+		block loader
+			+loader.bg-gradient-animated
+
+		#notifications-area.notifications-area

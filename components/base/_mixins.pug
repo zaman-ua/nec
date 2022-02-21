@@ -1,0 +1,93 @@
+//- Image
+	@param {string} name
+	@param {object} options
+	@param {boolean} options.retina
+mixin img( name, options )
+	-
+		var
+			isExt = /(.jpg|.png|.gif|.svg)$/i.test( name ),
+			isLink = /^(\/\/|http:\/\/|https:\/\/)/.test( name ),
+			size = name.match( /(\d+)x(\d+)/i );
+
+		if ( options && options.retina && size && size.length ) {
+			size[1] = ~~(size[1]/2);
+			size[2] = ~~(size[2]/2);
+		}
+
+		if ( !isLink && !isExt ) {
+			name += '.jpg';
+		}
+
+		if ( !isLink ) {
+			name = 'images/'+ name;
+		}
+
+	img( src= name, alt='', width= size ? size[1] : null, height= size ? size[2] : null )&attributes( attributes )
+
+
+//- Lazy Image
+	@param {string} name
+	@param {object} options
+	@param {boolean} options.retina
+mixin lazy-img( name, options )
+	if ( typeof ( builder ) !== 'undefined' && builder === true )
+		+img( name, options )&attributes( attributes )
+	else
+		-
+			var
+				isExt = /(.jpg|.png|.gif|.svg)$/i.test( name ),
+				isLink = /^(\/\/|http:\/\/|https:\/\/)/.test( name ),
+				size = name.match( /(\d+)x(\d+)/i );
+
+			if ( options && options.retina && size && size.length ) {
+				size[1] = ~~(size[1]/2);
+				size[2] = ~~(size[2]/2);
+			}
+
+			if ( !isLink && !isExt ) {
+				name += '.jpg';
+			}
+
+			if ( !isLink ) {
+				name = 'images/'+ name;
+			}
+
+		img.lazy-img( src='data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D', data-src= name, alt='', width= size ? size[1] : null, height= size ? size[2] : null )&attributes( attributes )
+
+
+//- Pended Image
+	@param {string} name
+	@param {object} options
+	@param {boolean} options.retina
+mixin pended-img( name, options )
+	if ( typeof ( builder ) !== 'undefined' && builder === true )
+		+img( name, options )&attributes( attributes )
+	else
+		-
+			var
+				isExt = /(.jpg|.png|.gif|.svg)$/i.test( name ),
+				isLink = /^(\/\/|http:\/\/|https:\/\/)/.test( name ),
+				size = name.match( /(\d+)x(\d+)/i );
+
+			if ( options && options.retina && size && size.length ) {
+				size[1] = ~~(size[1]/2);
+				size[2] = ~~(size[2]/2);
+			}
+
+			if ( !isLink && !isExt ) {
+				name += '.jpg';
+			}
+
+			if ( !isLink ) {
+				name = 'images/'+ name;
+			}
+
+		img.pended-img( src='data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D', data-src= name, alt='', width= size ? size[1] : null, height= size ? size[2] : null )&attributes( attributes )
+
+
+//- Loop without indexing mixin
+	@param {number} iterations - number of iterations
+mixin loop( iterations )
+	- for ( let i = 0; i < iterations; i++ )
+		block
+

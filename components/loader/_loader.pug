@@ -1,0 +1,10 @@
+mixin loader
+	// Page Loader
+	.page-loader&attributes( attributes )
+		svg.page-loader-progress( x='0px', y='0px', width='180', height='180', viewBox='0 0 180 180' )
+			circle.page-loader-circle( cx='90', cy='90', r='88' )
+		.page-loader-inner
+			.page-loader-inner-side.page-loader-inner-side-1
+				+pended-img( logo.default ).page-loader-logo( data-target='.page-loader-inner' )
+			.page-loader-inner-side.page-loader-inner-side-2
+				| Loading...

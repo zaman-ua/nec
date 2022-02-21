@@ -1,0 +1,59 @@
+@import "../bootstrap/scss/functions";
+@import "../base/functions";
+@import "../base/variables";
+@import "../bootstrap/scss/variables";
+@import "../bootstrap/scss/mixins";
+@import "../base/mixins";
+
+
+// Spacing
+h1 + .term-list {
+	margin-top: 20px;
+}
+
+.term-list + .term-list {
+	margin-top: 15px;
+}
+
+.term-list-horizontal + .term-list-horizontal {
+	margin-top: px-to-rem( 6px );
+}
+
+p + .term-list-horizontal {
+	margin-top: px-to-rem( 26px );
+}
+
+
+// Media
+@include media-breakpoint-up( sm ) {
+	.term-list-horizontal {
+		display: flex;
+		flex-wrap: wrap;
+
+		dt {
+			flex-shrink: 0;
+			width: 45%;
+			padding-right: 10px;
+		}
+
+		dd {
+			flex-grow: 1;
+			width: 55%;
+		}
+	}
+}
+
+@include media-breakpoint-up( xl ) {
+	h1 + .term-list {
+		margin-top: 56px;
+	}
+	.term-list + .term-list {
+		margin-top: 33px;
+	}
+	.term-list-horizontal + .term-list-horizontal {
+		margin-top: px-to-rem( 3px );
+	}
+	p + .term-list-horizontal {
+		margin-top: px-to-rem( 40px );
+	}
+}

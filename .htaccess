@@ -1,0 +1,55 @@
+# - svn folder hide -
+RewriteEngine on
+RewriteRule .*\.svn/.* - [F]
+RewriteBase /
+
+# if rewrite all url in small - AT-1158
+#RewriteCond %{REQUEST_URI} ^[^A-Z]*[A-Z].*
+#RewriteRule ^ ${lc:%{REQUEST_URI}} [L,R=301]
+# ---------------
+
+Options -Indexes
+
+#deny from all
+
+#php_value register_globals 0
+ErrorDocument 404 /?action=missing
+
+# AT-1158
+# Настроить 301 серверный редирект со всех страниц с "/" на страницы без "/" Пример:
+#RewriteCond %{request_method} ^GET$
+#RewriteCond %{REQUEST_URI} ^(.+)/$
+#RewriteRule ^(.+)$ %1 [L,R=301]
+
+RewriteRule ^robots.txt$ /imgbank/Image/seo/robots.txt
+RewriteRule ^(siteindex|sitemap)(\d*).xml$ /imgbank/xml/$1$2.xml
+
+# AT-281 multilingual subdomains
+RewriteCond %{REQUEST_URI} !^/[^\/]+.(.*)
+RewriteCond %{HTTP_HOST} ^(en)\.irbis\.(.*)$
+RewriteCond %{QUERY_STRING} !(.*)locale(.*)
+RewriteRule ^(.*)$ /?locale=%1&%{QUERY_STRING}
+
+RewriteCond %{HTTP_HOST} ^www.superpartbox.com.ua$ [OR]
+RewriteCond %{HTTP_HOST} ^pbx.mstarproject.com$ 
+RewriteRule ^(.*)$ http://superpartbox.com.ua/$1 [R=301,L] 
+
+# ALT-152
+RewriteRule ^catalog(\/{0,1})$ /?action=price_group [QSA,L]
+RewriteRule ^catalog/([a-zA-Z0-9_\-\s]+)(\/{0,1})$ /?action=price_group&category=$1 [QSA,L]
+RewriteRule ^catalog/([a-zA-Z0-9_\-\s]+)/([\d\w\s.\/].+)(\/{0,1})$ /?action=price_group&category=$1&all_params=$2 [QSA,L]
+
+# AT-617
+RewriteRule ^pages/([a-zA-Z0-9_\-]+)\/{0,1}$ /?action=$1 [QSA,L]
+RewriteRule ^pages/(news)\/_?([^\/]+)\/{0,1}$ /?action=news_preview&id=$2 [QSA,L]
+
+RewriteRule ^product/([a-zA-Z0-9\-\s\.]+)/([\d\w\-\x7f-\xffa-zA-Z0-9-\s\.,:\"\[\]\(\)\*\+\`\']+)\/{0,1}$ /?action=catalog&price_group=$1&id_product=$2 [QSA,L]
+
+RewriteRule ^search_text\/([^~\/]+)/sort=(.*)/way=(.*)$ /?action=search&search[query]=$1&sort=$2&way=$3 [QSA,L]
+RewriteRule ^search_text\/([^~\/]+)\/{0,1}$ /?action=search&search[query]=$1
+RewriteRule ^search_text\/([^~]+)~(\-?[0-9]+)\/{0,1}$ /?action=search&search[query]=$1&search[id_price_group]=$2
+
+RewriteRule ^admin(\/{0,1})$ /?action=user_login [QSA,L]
+
+RewriteRule ^(siteindex|site_index|sitemap|sitemapimages|sitemap-images|sitemap-products|sitemap-brands)(\d*).xml$ /imgbank/xml/$1$2.xml
+#------------
