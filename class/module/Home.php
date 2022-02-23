@@ -18,7 +18,7 @@ class Home extends Base
     	    from cat_part as cp
 		    join price_group_assign as pgs on cp.item_code=pgs.item_code
 		    join price_group as pg on pgs.id_price_group=pg.id
-		    where cp.product_label <> ''
+		    /*where cp.product_label <> ''*/
 	    ");
 		if($aAllProducts) {
 		    PriceGroup::CallParse($aAllProducts);
@@ -32,9 +32,10 @@ class Home extends Base
         Base::$sText.=Base::$tpl->fetch('nec/banner.tpl');
 
         //Base::$sText.=Base::$tpl->fetch('nec/content1.tpl');
-        Base::$sText.=Base::$tpl->fetch('nec/content2.tpl');
-        Base::$sText.=Base::$tpl->fetch('nec/content3.tpl');
-        Base::$sText.=Base::$tpl->fetch('nec/youtube.tpl');
+//        Base::$sText.=Base::$tpl->fetch('nec/content2.tpl');
+//        Base::$sText.=Base::$tpl->fetch('nec/content3.tpl');
+        Base::$sText.=Base::$tpl->fetch('nec/product.tpl');
+//        Base::$sText.=Base::$tpl->fetch('nec/youtube.tpl');
 
         Base::$sText.=Base::$tpl->fetch('nec/content4.tpl');
 	}

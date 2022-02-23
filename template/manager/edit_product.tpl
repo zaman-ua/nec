@@ -102,13 +102,23 @@
 					</p>
 				</div>
 				<div class="clearfix"></div>
+				<div class="col-sm-5 text-right">
+					<p>Код видео YouTube *</p>
+				</div>
+				<div class="col-sm-7">
+					<p>
+						<input type="text" id="fullVideo" name="product[video]"
+							   value="{$aProduct.video}">
+					</p>
+				</div>
+				<div class="clearfix"></div>
 			</div>
 		</div>
 		<div class="col-sm-6">
 			<div class="row">
 				<div class="col-sm-12">
 					<p class="important_p" style="text-align: center;">
-						Рекомендуемый размер фото 370x125 px. Фото 1 - главное.<br>Для
+						Фото 1 - главное.<br>Для
 						смены фотографии просто выберите другую фотографию
 					</p>
 				</div>

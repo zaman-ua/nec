@@ -12,7 +12,7 @@
   <tr>
    <td>{$oLanguage->getDMessage('Type')}:</td>
    <td>
-   	{html_options name=data[type_] values=$aType output=$aType selected=$aData.type_}
+   	{html_options name='data[type_]' values=$aType output=$aType selected=$aData.type_}
    </td>
   </tr>
 
@@ -35,7 +35,7 @@
   	</td>
   </tr>
   <tr>
-   <td>{$oLanguage->getDMessage('Èìÿ')}:</td>
+   <td>{$oLanguage->getDMessage('ï¿½ï¿½ï¿½')}:</td>
    <td><input type=text name=data[name] value='{$aData.name}'></td>
   </tr>
   </table>

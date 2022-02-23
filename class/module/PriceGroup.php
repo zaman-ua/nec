@@ -97,7 +97,7 @@ class PriceGroup extends Catalog
 	{
 		if($aItem) {
 		    foreach ($aItem as $sKey => $aValue) {
-		        $aItem[$sKey]['images']=Db::GetAll("select * from cat_pic where id_cat_part='".$aValue['id_cat_part']."' limit 1");
+		        $aItem[$sKey]['images']=Db::GetAll("select * from cat_pic where id_cat_part='".$aValue['id_cat_part']."' ");
 		        $aItem[$sKey]['criteria']=Db::GetAll("select * from cat_info where id_cat_part='".$aValue['id_cat_part']."' ");
 		    }
 		}

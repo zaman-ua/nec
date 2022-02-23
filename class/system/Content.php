@@ -372,12 +372,15 @@ class Content extends Base
 				Base::$tpl->Assign('sFaviconType',$aFileInfo['mime']);
 		}
 		
-		$aNews =Base::$language->GetLocalizedAll(array(
-		'table'=>'news',
-		'where'=>" and section='site' and visible=1 order by t.id desc  limit 0, ".Base::GetConstant('news:max_limit',5)."",
-		));
-		Base::$tpl->assign('aNews',$aNews);
-		PriceGroup::GetTabs();
+//		$aNews =Base::$language->GetLocalizedAll(array(
+//		'table'=>'news',
+//		'where'=>" and section='site' and visible=1 order by t.id desc  limit 0, ".Base::GetConstant('news:max_limit',5)."",
+//		));
+//		Base::$tpl->assign('aNews',$aNews);
+//		PriceGroup::GetTabs();
+        if(!Base::$aRequest['xajax']) {
+            Cart::ShowPopupCart();
+        }
 
 		Base::$sZirHtml="<i>*</i>";
 		Base::$tpl->assign('sZir', Base::$sZirHtml);

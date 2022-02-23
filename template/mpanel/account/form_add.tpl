@@ -16,7 +16,7 @@
 <tr>
    <td width=50%>{$oLanguage->getDMessage('Currency')}:</td>
     <td>
-   {html_options name=data[id_currency] options=$aCurrencyAssoc selected=$aData.id_currency}
+   {html_options name='data[id_currency]' options=$aCurrencyAssoc selected=$aData.id_currency}
   </td>
 </tr>
 <tr>

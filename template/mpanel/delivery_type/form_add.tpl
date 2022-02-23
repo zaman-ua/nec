@@ -46,7 +46,7 @@
 </tr>
 <tr>
    <td width=50%>{$oLanguage->getDMessage('group_type')}:</td>
-   <td>{html_options name=data[group_type] options=$aGroupType selected=$aData.group_type}</td>
+   <td>{html_options name='data[group_type]' options=$aGroupType selected=$aData.group_type}</td>
 </tr>
 
 </table>

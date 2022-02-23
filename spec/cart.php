@@ -7,10 +7,13 @@ switch (Base::$aRequest['action'])
 	case $sPrefix.'cart':
 	case $sPrefix.'cart_add':
 	case $sPrefix.'cart_edit':
-	case $sPrefix.'cart_delete':
 	case $sPrefix.'cart_clear':
 		$oObject->CartList();
 		break;
+
+    case $sPrefix.'delete':
+        $oObject->CartDelete();
+        break;
 	
 	case $sPrefix.'onepage_order':
 		$oObject->CartOnePageOrder();

@@ -32,6 +32,19 @@ class Cart extends Base
 	{
 		$this->CartList();
 	}
+    //-----------------------------------------------------------------------------------------------
+    public function CartDelete()
+    {
+        Base::$db->Execute("delete from cart where id='".Base::$aRequest['id']."'
+                and type_='cart'
+                ".Auth::$sWhere);
+
+        if(!Base::$aRequest['xajax']) {
+            Base::Redirect ( '/pages/cart_cart/' );
+        } else {
+            Cart::ShowPopupCart();
+        }
+    }
 	//-----------------------------------------------------------------------------------------------
 	public function CartList()
 	{
@@ -155,7 +168,7 @@ class Cart extends Base
 	{
 		$aData=array(
 				'table'=>'delivery_type',
-				'where'=>" and t.visible=1 order by t.name",
+				'where'=>" and t.visible=1 order by t.num",
 		);
 		if ($isAssoc) {
 			$aDeliveryType=Language::GetLocalizedAll($aData,false,'id,name,');
@@ -386,7 +399,7 @@ class Cart extends Base
 		{
 			
 			$aData=array(
-			'sWidth'=>"400px;",
+			'sClass'=>"rd-mailform",
 			'sHeader'=>"method=post",
 			'sContent'=>Base::$tpl->fetch('cart/cart_onepage_check_new_user.tpl'),
 // 			'sSubmitButton'=>'Create and process',
@@ -586,20 +599,9 @@ class Cart extends Base
 		if ($aItem) foreach($aItem as $key => $value) {
 			$aItem[$key]['total']=$value['number'] * Currency::PrintPrice($value['price'],null,2,'<none>');
 
-			$aItem[$key]['cart_history']=Db::GetAll(
-    			Base::GetSql('CartHistory',array(
-    			'code'=>$value['code'],
-    			'make'=>$value['make'],
-    			'id_provider'=>$value['id_provider'],
-    			'order'=>' order by post DESC',
-    			'limit'=>' limit 0,3',
-			)));
+            $dSubtotal+=$value['number'] * Currency::PrintPrice($value['price'],null,2,'<none>');
+            $dSubtotalWeight+=$value['number']*$value['weight'];
 
-			if (!$aItem[$key]['is_archive']) {
-				$dSubtotal+=$value['number'] * Currency::PrintPrice($value['price'],null,2,'<none>');
-				$dSubtotalWeight+=$value['number']*$value['weight'];
-			}
-			
 			if(!$aRowBrand[$value['pref']]) {
 			    $aRowBrand[$value['pref']]=Db::GetRow("select *,if(image_tecdoc<>'',concat( '".Base::$aGeneralConf['TecDocUrl']."/imgbank/tcd/' , image_tecdoc),image) as image_logo 
 			        from cat where pref='".$value['pref']."' ");
@@ -607,12 +609,15 @@ class Cart extends Base
 			
 			if($aRowBrand[$value['pref']]) {
 			    $aItem[$key]['brand']=$aRowBrand[$value['pref']]['title'];
-			    $aItem[$key]['image_logo']=$aRowBrand[$value['pref']]['image_logo'];
 			}
 		}
-		
-		PriceGroup::CallParse($aItem);
-		
+
+        if($aItem) {
+            foreach ($aItem as $sKey => $aValue) {
+                $aItem[$sKey]['image']=Db::GetOne("select image from cat_pic where id_cat_part=(select id from cat_part where item_code like '".$aValue['item_code']."') limit 1");
+            }
+        }
+
 		return array('dSubtotal'=>$dSubtotal,'dSubtotalWeight'=>$dSubtotalWeight);
 	}
 	//-----------------------------------------------------------------------------------------------
@@ -631,6 +636,7 @@ class Cart extends Base
 	//-----------------------------------------------------------------------------------------------
 	public function AddCartItem($iNumber=1,$bRedirect=true,$sReference='')
 	{
+	    $iNumber = BAse::$aRequest['number'];
 		if ($iNumber<=0) $iNumber=1;
 
 		$a=Db::GetRow(Base::GetSql('Catalog/Price',array(
@@ -660,20 +666,34 @@ class Cart extends Base
 		//$a['price']=Currency::GetPriceWithoutSymbol($a['price']);
 		//$a['price_order']=Currency::GetPriceWithoutSymbol($a['price_order']);
 
-		Db::AutoExecute("cart", $a);
+        $aExistingCart=Db::GetRow(Base::GetSql("Part/Search",array(
+            "type_"=>'cart',
+            "where"=>" and c.id_user='".Auth::$aUser['id']."' and c.item_code='".$a['item_code']."'
+			"
+        )));
+        if ($aExistingCart) {
+            $iNewNumber=$aExistingCart['number']+$a['number'];
+            Db::AutoExecute('cart',array('number'=>$iNewNumber,'price'=>$a['price']),'UPDATE'," id='".$aExistingCart['id']."'");
+        }
+        else Db::AutoExecute("cart", $a);
 
 		if (Base::$aRequest['xajax_request']) {
-			$bRedirect=false;
-			Base::$oResponse->AddScript("
-			     $('#cart_".Base::$aRequest['id']."').text('".Language::GetMessage("added to cart")."');    
-		    ");
+//			$bRedirect=false;
+//			Base::$oResponse->AddScript("
+//			     $('#cart_".Base::$aRequest['id']."').text('".Language::GetMessage("added to cart")."');
+//		    ");
+
+            Base::$oResponse->AddScript("$('#cart_add_class').addClass('btn-primary');");
+            Base::$oResponse->AddScript("$('#cart_add_class').removeClass('btn-block');");
+            Base::$oResponse->AddScript("$('#cart_add_class').removeClass('btn-dark');");
+            Base::$oResponse->AddAssign('cart_add_text','innerHTML',Language::GetMessage('added to cart'));
 		}
 		if ($bRedirect) Base::Redirect('?action=cart_cart');
 
-// 		$oContent=new Content();
-// 		$oContent->ParseTemplate(true);
-		
-// 		Cart::ShowPopupCart();
+        $oContent=new Content();
+        $oContent->ParseTemplate(true);
+
+        Cart::ShowPopupCart();
 	}
 	//-----------------------------------------------------------------------------------------------
 	public function CartUpdateNumber()
@@ -2172,22 +2192,10 @@ class Cart extends Base
 	//-----------------------------------------------------------------------------------------------
 	public function ShowPopupCart() {
 	    Base::$bXajaxPresent=true;
-	    $oTable=new Table();
-	    
- 	    // get list expired history positions
- 	    $aExpiredCount = $this->CartExpiredCountPositions();
- 	    if ($aExpiredCount > 0) {
-			Base::$tpl->assign('sTableMessage',Language::GetText("exist_expired_cart"));
-			Base::$tpl->assign('sTableMessageClass','warning_p');
- 	    }
+        $sWhere='';
+
  	    if (Auth::$aUser['id'] ){
-    	    if(Auth::$aUser['type_']=='manager') {
-    	        User::RecalcCart(Auth::$aUser['id_type_price_user'],0);
-    	    } else {
-    	        User::RecalcCart(Auth::$aUser['id'],1);
-    	    }
-	    
-	   
+
     	    $sWhere.=" and c.id_user=".Auth::$aUser['id'];
     	   
     	    $aDataCart=Db::GetAll(Base::GetSql("Part/Search",array(
@@ -2197,22 +2205,12 @@ class Cart extends Base
     	    
     	    $aSubtotalCart=Cart::CallParseCart($aDataCart);
     	    
-    	    Base::$tpl->assign('aDataCart',$aDataCart);
+    	    Base::$tpl->assign('aAllProductsCart',$aDataCart);
     	    Base::$tpl->assign('aSubtotalCart',$aSubtotalCart);
-    	    if (empty($aDataCart)){
-    	        Base::$oResponse->addScript("$('#icart_id').addClass('empty').html;");
-    	        Base::$tpl->assign('sTableMessage',Language::GetMessage("cart empty"));
-    	    }else{
-    	        Base::$oResponse->addScript("$('#icart_id').removeClass('empty').html;");
-    	    }
-    	    
-    	    Base::$oResponse->addAssign('popup-cart-body','innerHTML',Base::$tpl->fetch('cart/popup.tpl'));
-    	    Base::$oResponse->addScript("popupOpen('.js-popup-basket');");
-    	    Base::$oResponse->addAssign('icart_id','innerHTML',count($aDataCart));
-    	    Base::$oResponse->addScript("$('#user_phone').mask('(099)999-99-99',{placeholder:'_'});");
-    	    Base::$oResponse->AddScript("$('#fast_order_button').on( 'click', function() {
-              check_phone();
-            });");
+
+    	    if(Base::$aRequest['xajax']) {
+    	        Base::$oResponse->AddAssign('popup_cart','innerHTML',Base::$tpl->fetch('nec/popup_cart.tpl'));
+            }
 	    }
 	}
 	//-----------------------------------------------------------------------------------------------
