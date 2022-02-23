@@ -80,9 +80,9 @@
                         <li class="nav-item">
                             <a class="nav-link h4" data-bs-toggle="tab" href="#navClassic1-2" role="tab" aria-selected="false">{$oLanguage->GetMessage('criterias')}</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link h4" data-bs-toggle="tab" href="#navClassic1-3" role="tab" aria-selected="false">{$oLanguage->GetMessage('Video')}</a>
-                        </li>
+{*                        <li class="nav-item">*}
+{*                            <a class="nav-link h4" data-bs-toggle="tab" href="#navClassic1-3" role="tab" aria-selected="false">{$oLanguage->GetMessage('Video')}</a>*}
+{*                        </li>*}
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="navClassic1-1" role="tabpanel">
@@ -95,13 +95,13 @@
                                 {/foreach}
                             </ul>
                         </div>
-                        <div class="tab-pane fade" id="navClassic1-3" role="tabpanel">
+{*                        <div class="tab-pane fade" id="navClassic1-3" role="tabpanel">*}
 
-                            <div class="ratio ratio-16x9">
-                                <iframe class="ratio-item" src="about:blank" data-pended-iframe="https://www.youtube.com/embed/{$aProduct.video}" allowfullscreen=""></iframe>
-                            </div>
+{*                            <div class="ratio ratio-16x9">*}
+{*                                <iframe class="ratio-item" src="about:blank" data-pended-iframe="https://www.youtube.com/embed/{$aProduct.video}" allowfullscreen=""></iframe>*}
+{*                            </div>*}
 
-                        </div>
+{*                        </div>*}
                     </div>
                 </div>
             </div>
