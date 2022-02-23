@@ -31,7 +31,7 @@ class Home extends Base
 
         Base::$sText.=Base::$tpl->fetch('nec/banner.tpl');
 
-        Base::$sText.=Base::$tpl->fetch('nec/content1.tpl');
+//        Base::$sText.=Base::$tpl->fetch('nec/content1.tpl');
 //        Base::$sText.=Base::$tpl->fetch('nec/content2.tpl');
 //        Base::$sText.=Base::$tpl->fetch('nec/content3.tpl');
         Base::$sText.=Base::$tpl->fetch('nec/product.tpl');
