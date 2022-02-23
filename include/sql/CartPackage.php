@@ -29,9 +29,11 @@ function SqlCartPackageCall($aData)
 			, round(".$dTax."*100,2) as tax
 			, ".DateFormat::GetSqlDate("cp.post_date")." as date_bill
 			, uc.zip, uc.address, uc.city, uc.phone, uc.phone2, uc.name
+			, dt.name as delivery_type_name
 			from cart_package cp
 			inner join user as u on cp.id_user=u.id
 			inner join user_customer as uc on u.id=uc.id_user
+            left join delivery_type as dt on cp.id_delivery_type=dt.id
 				".$sJoin."
 			where 1=1
 				".$sWhere."

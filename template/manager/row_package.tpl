@@ -48,6 +48,10 @@
     
     <div class="order-num">{$oLanguage->GetMessage('Is payed')}</div>
     {include file='addon/mpanel/yes_no.tpl' bData=$aRow.is_payed}
+    <br>
+
+    <div class="order-num">{$oLanguage->GetMessage('Shipment')}</div>
+    {$aRow.delivery_type_name} {$oCurrency->PrintPrice($aRow.price_delivery)}
 </td>
 </tr>
 <tr>
